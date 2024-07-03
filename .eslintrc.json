@@ -1,5 +1,7 @@
 {
-  "rules": {
-    // "@typescript-eslint/no-unused-vars": "off"
-  }
+    "extends": ["plugin:prettier/recommended"],
+    "plugins": ["prettier"],
+    "rules": {
+        "@typescript-eslint/no-unused-vars": "off"
+    }
 }
