@@ -1,11 +1,7 @@
 import mongoose from "mongoose"
+import user from "../Types/userTypes"
 
- interface user {
-    _id:string,
-    name:string,
-    email:string,
-    password:string
-}
+
 
 const userSchema = new mongoose.Schema<user>({
     name:{
