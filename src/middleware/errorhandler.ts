@@ -1,13 +1,18 @@
-import { NextFunction, Request, Response, } from "express";
+import { NextFunction, Request, Response } from "express"
 
-import { HttpError } from "http-errors";
-import { config } from "../config/config";
+import { HttpError } from "http-errors"
+import { config } from "../config/config"
 
-const errorHandler=((err:HttpError, req:Request, res:Response,next:NextFunction)=>{
-    const statusCode=err.statusCode || 500;
+const errorHandler = (
+    err: HttpError,
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const statusCode = err.statusCode || 500
     return res.status(statusCode).json({
-        message:err.message,
-        errorStack:config.env ==='Development'? err.stack:''
+        message: err.message,
+        errorStack: config.env === "Development" ? err.stack : "",
     })
-})
+}
 export default errorHandler

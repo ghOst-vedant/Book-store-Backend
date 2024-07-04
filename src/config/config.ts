@@ -1,6 +1,6 @@
-import { config as configuration } from "dotenv";
+import { config as configuration } from "dotenv"
 
-configuration();
+configuration()
 const _config = {
     port: process.env.PORT!,
     dbUrl: process.env.MONGO!,
@@ -9,6 +9,6 @@ const _config = {
     cloud_name: process.env.CLOUDINARY_NAME!,
     cloud_api: process.env.CLOUDINARY_API_KEY!,
     cloud_secret: process.env.CLOUDINARY_SECRET!,
-};
+}
 
-export const config = Object.freeze(_config);
+export const config = Object.freeze(_config)
