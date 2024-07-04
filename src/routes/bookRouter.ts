@@ -1,6 +1,7 @@
 import express from "express"
 import {
     createBook,
+    deleteBook,
     getBookById,
     getBooks,
     patchBook,
@@ -15,6 +16,8 @@ const upload = multer({
     // 30mb
     limits: { fileSize: 1e7 },
 })
+
+//Book CRUD routes
 bookRouter.post(
     "/",
     auth,
@@ -35,5 +38,5 @@ bookRouter.patch(
 )
 bookRouter.get("/", getBooks)
 bookRouter.get("/:bookId", getBookById)
-
+bookRouter.delete("/:bookId", auth, deleteBook)
 export default bookRouter
