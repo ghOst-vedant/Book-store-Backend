@@ -93,6 +93,7 @@ export const patchBook = async (
                 format: coverImageMimeType,
             })
             newCoverImage = uploadResult.secure_url
+            await fs.promises.unlink(filePath)
         }
 
         let newFile = ""
@@ -113,6 +114,7 @@ export const patchBook = async (
                 },
             )
             newFile = bookUploadResult.secure_url
+            await fs.promises.unlink(bookPath)
         }
         const updateBook = await Book.findOneAndUpdate(
             { _id: bookId },
@@ -124,6 +126,7 @@ export const patchBook = async (
             },
             { new: true },
         )
+
         res.status(200).json(updateBook)
     } catch (error) {
         console.error(error)
