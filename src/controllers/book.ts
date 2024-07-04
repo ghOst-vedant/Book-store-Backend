@@ -50,6 +50,7 @@ export const createBook = async (
             coverImage: uploadResult.secure_url,
             file: bookUploadResult.secure_url,
         })
+        // delete files from the server
         await fs.promises.unlink(filePath)
         await fs.promises.unlink(bookPath)
         res.status(201).json({ id: newBook._id })
@@ -69,11 +70,9 @@ export const patchBook = async (
     const book = await Book.findById({ _id: bookId })
 
     // Check if the book exist
-
     if (!book) return res.status(404).json({ message: "Book not found" })
 
     //check if the user is the author
-
     if (book.author.toString() !== _req.userId)
         return res
             .status(403)
@@ -84,6 +83,7 @@ export const patchBook = async (
             [fieldname: string]: Express.Multer.File[]
         }
         let newCoverImage = ""
+        // if there exists any new coverImage
         if (files.coverImage) {
             const coverImageMimeType = files.coverImage[0].mimetype
                 .split("/")
@@ -104,6 +104,7 @@ export const patchBook = async (
         }
 
         let newFile = ""
+        // if there is new file in the req.files
         if (files.file) {
             const bookName = files.file[0].filename
             const bookPath = path.resolve(
@@ -182,6 +183,8 @@ export const deleteBook = async (
     // see if the user is the author
     if (book.author.toString() !== _req.userId)
         return next(createHttpError(403, "Unauthorized access"))
+
+    // calculate the publicid fromt he url of the coverImage and pdf file
     const imageSplits = book.coverImage.split("/")
     const coverImageId =
         imageSplits.at(-2) + "/" + imageSplits.at(-1)?.split(".").at(-2)
@@ -189,8 +192,7 @@ export const deleteBook = async (
     const fileSplits = book.file.split("/")
     const fileId = fileSplits.at(-2) + "/" + fileSplits.at(-1)
 
-    // Delete from cloudinary
-
+    // Delete from cloudinary and mongoDB
     try {
         await cloudinary.uploader.destroy(coverImageId)
         await cloudinary.uploader.destroy(fileId, { resource_type: "raw" })
