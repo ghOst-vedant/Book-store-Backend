@@ -145,3 +145,18 @@ export const getBooks = async (
         return next(createHttpError(500, "Error Fetching Books"))
     }
 }
+
+export const getBookById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const { bookId } = req.params
+    const book = await Book.findOne({ _id: bookId })
+    if (!book) return next(createHttpError(404, "Book not found"))
+    res.status(201).json({ book })
+    try {
+    } catch (error) {
+        return next(createHttpError(500, "Unable to get book"))
+    }
+}
