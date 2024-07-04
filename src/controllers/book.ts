@@ -3,12 +3,14 @@ import cloudinary from "../config/cloudinary"
 import path from "path"
 import Book from "../models/bookModel"
 import fs from "node:fs"
+import { authReq } from "../middleware/auth"
 export const createBook = async (
     req: Request,
     res: Response,
     next: NextFunction,
 ) => {
     const { title, genre } = req.body
+    const _req = req as authReq
     try {
         const files = req.files as {
             [fieldname: string]: Express.Multer.File[]
@@ -43,7 +45,7 @@ export const createBook = async (
         const newBook = await Book.create({
             title,
             genre,
-            author: "667a931c425902c9513bd7c1",
+            author: _req.userId,
             coverImage: uploadResult.secure_url,
             file: bookUploadResult.secure_url,
         })
