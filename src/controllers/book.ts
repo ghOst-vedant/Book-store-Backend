@@ -13,6 +13,7 @@ export const createBook = async (
     const { title, genre } = req.body
     const _req = req as authReq
     try {
+        // cloudinary file and image upload
         const files = req.files as {
             [fieldname: string]: Express.Multer.File[]
         }
@@ -36,13 +37,14 @@ export const createBook = async (
             "../../public/data/uploads",
             bookName,
         )
+        // cloudinary book pdf upload
         const bookUploadResult = await cloudinary.uploader.upload(bookPath, {
             resource_type: "raw",
             filename_override: bookName,
             folder: "book-pdfs",
             format: "pdf",
         })
-
+        // creating the book to the database
         const newBook = await Book.create({
             title,
             genre,
