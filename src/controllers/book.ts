@@ -4,6 +4,7 @@ import path from "path"
 import Book from "../models/bookModel"
 import fs from "node:fs"
 import { authReq } from "../middleware/auth"
+import createHttpError from "http-errors"
 export const createBook = async (
     req: Request,
     res: Response,
@@ -130,5 +131,17 @@ export const patchBook = async (
         res.status(200).json(updateBook)
     } catch (error) {
         console.error(error)
+    }
+}
+export const getBooks = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    try {
+        const books = await Book.find()
+        res.status(200).json({ books })
+    } catch (error) {
+        return next(createHttpError(500, "Error Fetching Books"))
     }
 }
