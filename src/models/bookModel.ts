@@ -19,6 +19,10 @@ const bookSchema = new mongoose.Schema<book>(
             type: String,
             required: true,
         },
+        file: {
+            type: String,
+            required: true,
+        },
     },
     { timestamps: true },
 )
