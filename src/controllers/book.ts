@@ -87,6 +87,11 @@ export const patchBook = async (
         let newCoverImage = ""
         // if there exists any new coverImage
         if (files.coverImage) {
+            // delete previous image from cloudinary
+            const imageSplits = book.coverImage.split("/")
+            const coverImageId =
+                imageSplits.at(-2) + "/" + imageSplits.at(-1)?.split(".").at(-2)
+            await cloudinary.uploader.destroy(coverImageId)
             const coverImageMimeType = files.coverImage[0].mimetype
                 .split("/")
                 .at(-1)
@@ -108,6 +113,10 @@ export const patchBook = async (
         let newFile = ""
         // if there is new file in the req.files
         if (files.file) {
+            const fileSplits = book.file.split("/")
+            const fileId = fileSplits.at(-2) + "/" + fileSplits.at(-1)
+
+            await cloudinary.uploader.destroy(fileId, { resource_type: "raw" })
             const bookName = files.file[0].filename
             const bookPath = path.resolve(
                 __dirname,
@@ -199,7 +208,7 @@ export const deleteBook = async (
         await cloudinary.uploader.destroy(coverImageId)
         await cloudinary.uploader.destroy(fileId, { resource_type: "raw" })
         await Book.deleteOne({ _id: bookId })
-        res.status(204)
+        return res.status(204).json({ message: "Successfully deleted" })
     } catch (error) {
         return next(createHttpError(500, "Error Deleting files"))
     }
